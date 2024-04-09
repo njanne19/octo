@@ -166,3 +166,8 @@ wandb
 .vscode
 .idea
 datasets/debug_dataset/bridge_dataset/1.0.0/action_*
+
+
+# Dataset loader specific ignores 
+recordings/bags
+recordings/octo_objects
