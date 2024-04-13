@@ -367,7 +367,13 @@ def make_dataset_from_rlds(
 
         return traj
 
-    builder = tfds.builder(name, data_dir=data_dir)
+    # Commenting out this line to see what happens 
+    # builder = tfds.builder(name, data_dir=data_dir)
+    builder = tfds.builder_from_directories([data_dir])
+    
+    dataset_before_dlimp = builder.as_dataset()
+    print(f"DATASET BEFORE DLIMP")
+    print(dataset_before_dlimp)
 
     # load or compute dataset statistics
     if isinstance(dataset_statistics, str):
@@ -377,8 +383,10 @@ def make_dataset_from_rlds(
         full_dataset = dl.DLataset.from_rlds(
             builder, split="all", shuffle=False, num_parallel_reads=num_parallel_reads
         )
+
         for filter_fcn_spec in filter_functions:
             full_dataset = full_dataset.filter(ModuleSpec.instantiate(filter_fcn_spec))
+        
         full_dataset = full_dataset.traj_map(restructure, num_parallel_calls)
         # tries to load from cache, otherwise computes on the fly
         dataset_statistics = get_dataset_statistics(
